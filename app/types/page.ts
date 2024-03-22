@@ -1,10 +1,5 @@
 // types/index.ts
-export interface PokemonBasicInfo {
-    name: string;
-    url: string;
-  }
-  
-  export interface Pokemon {
+export interface Pokemon {
     name: string;
     url: string;
   }
@@ -16,15 +11,13 @@ export interface PokemonBasicInfo {
     name: string;
     height: number;
     weight: number;
-    types: PokemonType[];
+    types: Array<{
+      slot: number;
+      type: {
+        name: string;
+        url: string;
+      };
+    }>;
     order: number;
-  }
-  
-  export interface PokemonType {
-    slot: number;
-    type: {
-      name: string;
-      url: string;
-    };
   }
   

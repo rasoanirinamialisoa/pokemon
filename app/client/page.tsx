@@ -1,31 +1,32 @@
-// Exemple pour pages/server/index.tsx
-import { GetServerSideProps } from 'next';
+// pages/client/index.tsx
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Pokemon } from '../types/page';
 
-interface HomeProps {
-  pokemons: Pokemon[];
+function HomePage() {
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50');
+      const data = await response.json();
+      setPokemons(data.results);
+    }
+
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <h1>Pokémon List</h1>
+      {pokemons.map((pokemon, index) => (
+        <div key={index}>
+          <p>{pokemon.name}</p>
+          <Link href={`/client/${pokemon.name}`}>Détails</Link>
+        </div>
+      ))}
+    </div>
+  );
 }
-
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50');
-  const data = await res.json();
-  return {
-    props: {
-      pokemons: data.results,
-    },
-  };
-};
-
-const HomePage = ({ pokemons }: HomeProps) => (
-  <div>
-    {pokemons.map((pokemon, index) => (
-      <div key={index}>
-        <p>{pokemon.name}</p>
-        <Link href={`/server/${pokemon.name}`}>Détails</Link>
-      </div>
-    ))}
-  </div>
-);
 
 export default HomePage;
